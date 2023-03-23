@@ -13,10 +13,30 @@ public class GeneradorMazmorra : MonoBehaviour
     }
 
     public Vector2Int size;
-    public int posicionInicio;
+    public int posicionInicio = 0;
+    public GameObject sala;
+    public Vector2 dimension;
     List<Celda> tablero;
 
 
+
+    private void Start()
+    {
+        GeneradorLaberinto();
+    }
+
+
+    void GenerarMazmorra()
+    {
+        for (int i = 0; i < size.x; i++)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                var nuevaSala = Instantiate(sala, new Vector3(i * dimension.x, 0, j * dimension.y), Quaternion.identity, transform).GetComponent<ComportamienoSala>();
+                nuevaSala.UpdateSala(tablero[i + j * size.x].status);
+            }
+        }
+    }
 
     //Metodo Generador de laberinto
     void GeneradorLaberinto()
@@ -102,7 +122,7 @@ public class GeneradorMazmorra : MonoBehaviour
 
                     else //vecino de arriba
                     {
-                        tablero[celdaActual].status[9] = true; //colocamos la puerta arriba
+                        tablero[celdaActual].status[0] = true; //colocamos la puerta arriba
                         celdaActual = nuevaCelda;
                         tablero[celdaActual].status[1] = true; //colocamos la puerta abajo en la nueva celda
                     }
@@ -111,6 +131,7 @@ public class GeneradorMazmorra : MonoBehaviour
             }
             #endregion
         }
+        GenerarMazmorra();
     }
 
     List<int> CompruebaVecinos(int celda)
